@@ -47,7 +47,6 @@ pane.on('change', () => {
 
 function updateCardStyles() {
   const cards = document.querySelectorAll('.card');
-  const container = document.getElementById('card-container');
   
   // Update background color
   document.body.style.backgroundColor = params.backgroundColor;
