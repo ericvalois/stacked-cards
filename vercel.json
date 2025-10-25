@@ -3,10 +3,6 @@
 		{
 			"source": "/stacked-cards/:match*",
 			"destination": "https://demo.ericvalois.com/:match*"
-		},
-		{
-			"source": "/(.*)",
-			"destination": "/"
 		}
 	]
 }
