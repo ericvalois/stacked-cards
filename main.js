@@ -1,67 +1,87 @@
-import { Pane } from 'tweakpane';
-import './style.css';
+import { Pane } from "tweakpane";
+import "./style.css";
 
-// Create a Tweakpane instance
 const pane = new Pane({
-  title: 'Card Controls',
+	title: "Config",
+	expanded: true,
 });
 
-// Parameters object
-const params = {
-  cardSpacing: 20,
-  cardRotation: 5,
-  cardOpacity: 1,
-  backgroundColor: '#1a1a1a',
+const debugConfig = {
+	debug: false,
 };
 
-// Add controls to the pane
-pane.addBinding(params, 'cardSpacing', {
-  min: 0,
-  max: 50,
-  step: 1,
-  label: 'Spacing',
+pane.addBinding(debugConfig, "debug", {
+	label: "Debug",
 });
 
-pane.addBinding(params, 'cardRotation', {
-  min: -15,
-  max: 15,
-  step: 1,
-  label: 'Rotation',
+const cardHeight = {
+	cardHeight: 400,
+};
+
+const cardConfig = pane.addFolder({
+	title: "Cards",
+	expanded: true,
 });
 
-pane.addBinding(params, 'cardOpacity', {
-  min: 0,
-  max: 1,
-  step: 0.1,
-  label: 'Opacity',
+cardConfig.addBinding(cardHeight, "cardHeight", {
+	label: "Height",
+	min: 100,
+	max: 1000,
+	step: 10,
 });
 
-pane.addBinding(params, 'backgroundColor', {
-  label: 'Background',
+const stickyPosition = {
+	stickyPosition: "top",
+};
+
+cardConfig.addBinding(stickyPosition, "stickyPosition", {
+	label: "Sticky Position",
+	options: {
+		top: "top",
+		middle: "middle",
+		bottom: "bottom",
+	},
 });
 
-// Update card styles when parameters change
-pane.on('change', () => {
-  updateCardStyles();
-});
+let isUpdating = false;
+let timeoutId = null;
 
-function updateCardStyles() {
-  const cards = document.querySelectorAll('.card');
-  
-  // Update background color
-  document.body.style.backgroundColor = params.backgroundColor;
-  
-  // Update card styles
-  cards.forEach((card, index) => {
-    const offset = index * params.cardSpacing;
-    const rotation = index * params.cardRotation;
-    
-    card.style.transform = `translateY(${offset}px) rotate(${rotation}deg)`;
-    card.style.opacity = params.cardOpacity;
-  });
-}
+const update = () => {
+	if (isUpdating) return;
+	isUpdating = true;
 
-// Initialize styles
-updateCardStyles();
+	try {
+		document.documentElement.dataset.debug = debugConfig.debug;
+		document.documentElement.style.setProperty("--card-height", `${cardHeight.cardHeight}px`);
+		document.documentElement.dataset.stickyPosition = stickyPosition.stickyPosition;
+		//console.log(`${cardHeight.cardHeight}px`);
+	} finally {
+		isUpdating = false;
+	}
+};
 
-console.log('Vite.js app with Tweakpane initialized!');
+const sync = (event) => {
+	console.log({ event });
+
+	// Clear any pending updates
+	if (timeoutId) {
+		clearTimeout(timeoutId);
+	}
+
+	// Debounce the update
+	timeoutId = setTimeout(() => {
+		if (!document.startViewTransition) {
+			update();
+		} else {
+			try {
+				document.startViewTransition(() => update());
+			} catch (error) {
+				console.warn("View transition failed, falling back to direct update:", error);
+				update();
+			}
+		}
+	}, 16); // ~60fps
+};
+
+pane.on("change", sync);
+update();
