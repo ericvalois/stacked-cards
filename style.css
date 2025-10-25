@@ -1,16 +1,17 @@
 :root {
-	--card-margin: 4vw;
+	--card-gap: 25vh;
 	--card-top-offset: 1.5em;
 	--outline-width: 0px;
 	--card-height: 400px;
-	--container-width: clamp(300px, 90vw, 800px);
+	--container-width: clamp(300px, 90vw, 1200px);
 }
 
 #cards {
 	/* Make place at bottom, as items will slide to that position*/
-	padding-bottom: calc(var(--numcards) * var(--card-top-offset));
-	/* Don't include the --card-margin in padding, as that will affect the scroll-timeline*/
-	margin-bottom: var(--card-margin);
+	/* padding-bottom: calc(var(--numcards) * var(--card-top-offset)); */
+	/* Don't include the --card-gap in padding, as that will affect the scroll-timeline*/
+	/* margin-bottom: var(--card-gap); */
+	margin-bottom: 15vh;
 }
 
 #card_1 {
@@ -55,7 +56,7 @@ main * {
 }
 
 html {
-	background: rgb(58 29 43);
+	background: rgb(46 46 46);
 	color: rgb(255, 255, 255);
 	font-size: 10px;
 }
@@ -68,10 +69,26 @@ body {
 	font-style: normal;
 }
 
+body::before {
+	--size: 45px;
+	--line: color-mix(in hsl, canvasText, transparent 10%);
+	content: "";
+	height: 100vh;
+	width: 100vw;
+	position: fixed;
+	background: linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+		linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+	mask: linear-gradient(-20deg, transparent 50%, white);
+	top: 0;
+	transform-style: flat;
+	pointer-events: none;
+	z-index: -1;
+}
+
 h1,
 h2,
 h3 {
-	font-weight: 700;
+	font-weight: 900;
 	text-transform: uppercase;
 	text-wrap: balance;
 	line-height: 1;
@@ -98,7 +115,7 @@ header {
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: repeat(var(--numcards), var(--card-height));
-	gap: var(--card-margin);
+	gap: var(--card-gap);
 }
 
 .card {
@@ -164,15 +181,14 @@ main p {
 }
 
 main .btn {
-	background: rgb(188 87 36);
+	background: rgb(46 46 46);
 	color: rgb(255 255 255);
 	text-decoration: none;
 	display: inline-block;
-	padding: 0.5em;
+	padding: 0.5em 1em;
 	border-radius: 0.25em;
-	font-size: 1em;
+	font-size: 0.8em;
 	font-weight: 400;
-	text-transform: uppercase;
 }
 
 aside {
@@ -192,7 +208,16 @@ aside {
 		--reverse-index0: calc(var(--reverse-index) - 1); /* 0-based reverse index */
 	}
 
-	@keyframes scale {
+	@keyframes scale-down {
+		to {
+			transform: scale(calc(1.1 - calc(0.1 * var(--reverse-index))));
+		}
+	}
+
+	@keyframes scale-up {
+		from {
+			transform: scale(1);
+		}
 		to {
 			transform: scale(calc(1.1 - calc(0.1 * var(--reverse-index))));
 		}
@@ -204,12 +229,29 @@ aside {
 	}
 
 	.card__content {
+		will-change: transform;
 		--start-range: calc(var(--index0) / var(--numcards) * 100%);
 		--end-range: calc((var(--index)) / var(--numcards) * 100%);
 
-		animation: linear scale forwards;
+		animation: linear scale-down forwards;
 		animation-timeline: --cards-element-scrolls-in-body;
 		animation-range: exit-crossing var(--start-range) exit-crossing var(--end-range);
+	}
+
+	@keyframes stackedAnimation {
+		0% {
+			transform: scale(calc(1.1 - calc(0.1 * var(--reverse-index))));
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	html[data-sticky-position="bottom"] .card__content {
+		animation: auto linear stackedAnimation both;
+		animation-timeline: --cards-element-scrolls-in-body;
+		/* animation-range: entry 25% exit calc(2vh + 160px); */
+		animation-range: entry-crossing 0% contain 50%;
 	}
 }
 

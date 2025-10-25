@@ -14,14 +14,14 @@ pane.addBinding(debugConfig, "debug", {
 	label: "Debug",
 });
 
-const cardHeight = {
-	cardHeight: 400,
-};
-
 const cardConfig = pane.addFolder({
 	title: "Cards",
 	expanded: true,
 });
+
+const cardHeight = {
+	cardHeight: 400,
+};
 
 cardConfig.addBinding(cardHeight, "cardHeight", {
 	label: "Height",
@@ -30,18 +30,29 @@ cardConfig.addBinding(cardHeight, "cardHeight", {
 	step: 10,
 });
 
-const stickyPosition = {
-	stickyPosition: "top",
+const cardGap = {
+	cardGap: 25,
 };
 
-cardConfig.addBinding(stickyPosition, "stickyPosition", {
-	label: "Sticky Position",
-	options: {
-		top: "top",
-		middle: "middle",
-		bottom: "bottom",
-	},
+cardConfig.addBinding(cardGap, "cardGap", {
+	label: "Gap (vh)",
+	min: 1,
+	max: 100,
+	step: 1,
 });
+
+// const stickyPosition = {
+// 	stickyPosition: "top",
+// };
+
+// cardConfig.addBinding(stickyPosition, "stickyPosition", {
+// 	label: "Sticky Position",
+// 	options: {
+// 		top: "top",
+// 		middle: "middle",
+// 		bottom: "bottom",
+// 	},
+// });
 
 let isUpdating = false;
 let timeoutId = null;
@@ -53,16 +64,14 @@ const update = () => {
 	try {
 		document.documentElement.dataset.debug = debugConfig.debug;
 		document.documentElement.style.setProperty("--card-height", `${cardHeight.cardHeight}px`);
+		document.documentElement.style.setProperty("--card-gap", `${cardGap.cardGap}vh`);
 		document.documentElement.dataset.stickyPosition = stickyPosition.stickyPosition;
-		//console.log(`${cardHeight.cardHeight}px`);
 	} finally {
 		isUpdating = false;
 	}
 };
 
 const sync = (event) => {
-	console.log({ event });
-
 	// Clear any pending updates
 	if (timeoutId) {
 		clearTimeout(timeoutId);
@@ -80,7 +89,7 @@ const sync = (event) => {
 				update();
 			}
 		}
-	}, 16); // ~60fps
+	}, 100);
 };
 
 pane.on("change", sync);
