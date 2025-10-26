@@ -25,9 +25,14 @@ const cardHeight = {
 
 cardConfig.addBinding(cardHeight, "cardHeight", {
 	label: "Height",
-	min: 100,
-	max: 1000,
-	step: 10,
+});
+
+const cardOffset = {
+	cardOffset: "1.5em",
+};
+
+cardConfig.addBinding(cardOffset, "cardOffset", {
+	label: "Offset",
 });
 
 const cardGap = {
@@ -65,6 +70,7 @@ const update = () => {
 		document.documentElement.dataset.debug = debugConfig.debug;
 		document.documentElement.style.setProperty("--card-height", `${cardHeight.cardHeight}px`);
 		document.documentElement.style.setProperty("--card-gap", `${cardGap.cardGap}vh`);
+		document.documentElement.style.setProperty("--card-top-offset", cardOffset.cardOffset);
 		document.documentElement.dataset.stickyPosition = stickyPosition.stickyPosition;
 	} finally {
 		isUpdating = false;
