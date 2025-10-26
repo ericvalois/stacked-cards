@@ -43,10 +43,6 @@
 	min-height: var(--card-height);
 }
 
-.card__content div:first-of-type {
-	padding: 5vh 0;
-}
-
 /** PAGE STYLING **/
 
 main * {
@@ -57,7 +53,7 @@ main * {
 }
 
 html {
-	background: rgb(46 46 46);
+	background: #000;
 	color: rgb(255, 255, 255);
 	font-size: 10px;
 }
@@ -68,18 +64,20 @@ body {
 	font-optical-sizing: auto;
 	font-weight: 100;
 	font-style: normal;
+	display: grid;
+	gap: 1em;
 }
 
 body::before {
 	--size: 45px;
-	--line: color-mix(in hsl, canvasText, transparent 10%);
+	--line: rgb(255 255 255 / 40%);
 	content: "";
 	height: 100vh;
 	width: 100vw;
 	position: fixed;
 	background: linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
 		linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
-	mask: linear-gradient(-20deg, transparent 50%, white);
+	mask: linear-gradient(-20deg, transparent 20%, white);
 	top: 0;
 	transform-style: flat;
 	pointer-events: none;
@@ -112,7 +110,6 @@ header {
 #cards {
 	list-style: none;
 	outline: calc(var(--outline-width) * 10) solid hotpink;
-
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: repeat(var(--numcards), var(--card-height));
@@ -129,32 +126,41 @@ header {
 	color: rgb(10, 5, 7);
 	border-radius: 1em;
 	overflow: hidden;
-
 	display: grid;
-	grid-template-areas: "text img";
-	grid-template-columns: 1fr 1fr;
 	grid-template-rows: auto;
-
-	align-items: stretch;
+	align-items: end;
 	outline: var(--outline-width) solid blue;
 }
 
 .card__content > div {
-	grid-area: text;
-	width: 80%;
 	place-self: center;
 	text-align: left;
-
 	display: grid;
 	gap: 1em;
 	place-items: start;
+	width: 100%;
+	padding: 5vh;
 }
 
 .card__content > figure {
-	grid-area: img;
 	overflow: hidden;
 	box-shadow: inset 0px 0px 15px 5px rgba(0, 0, 0, 0.15);
 	position: relative;
+	height: 200px;
+}
+
+@media (min-width: 800px) {
+	.card__content {
+		grid-template-areas: "text img";
+		grid-template-columns: 1fr 1fr;
+	}
+	.card__content > div {
+		grid-area: text;
+	}
+	.card__content > figure {
+		grid-area: img;
+		height: 100%;
+	}
 }
 
 .card__content > figure > img {
