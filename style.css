@@ -45,8 +45,7 @@
 
 /** PAGE STYLING **/
 
-main * {
-	/* Poor Man's Reset */
+* {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
@@ -257,29 +256,14 @@ aside {
 	html[data-sticky-position="bottom"] .card__content {
 		animation: auto linear stackedAnimation both;
 		animation-timeline: --cards-element-scrolls-in-body;
-		/* animation-range: entry 25% exit calc(2vh + 160px); */
 		animation-range: entry-crossing 0% contain 50%;
 	}
 }
 
-/** Settings **/
+/** Debug **/
 
 html[data-debug="true"] main {
 	--outline-width: 1px;
-}
-
-html[data-sticky-position="middle"] .card {
-	top: 50%;
-	transform: translateY(-50%);
-}
-
-html[data-sticky-position="middle"] #cards {
-	margin-top: var(--card-height);
-}
-
-html[data-sticky-position="bottom"] .card {
-	top: auto;
-	bottom: 0;
 }
 
 /** WARNING **/
