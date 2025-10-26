@@ -205,6 +205,7 @@ aside {
 	display: grid;
 	gap: 2em;
 	line-height: 1.5;
+	padding-bottom: 5em;
 }
 
 @supports (animation-timeline: view()) {
