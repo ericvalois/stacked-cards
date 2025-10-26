@@ -1,6 +1,7 @@
 :root {
 	--card-gap: 25vh;
 	--card-top-offset: 1.5em;
+	--sticky-position: 0%;
 	--outline-width: 0px;
 	--card-height: 400px;
 	--container-width: clamp(300px, 90vw, 1200px);
@@ -32,7 +33,7 @@
 
 .card {
 	position: sticky;
-	top: 0;
+	top: var(--sticky-position);
 	padding-top: calc(var(--index) * var(--card-top-offset));
 }
 
