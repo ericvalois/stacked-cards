@@ -261,6 +261,15 @@ aside {
 	}
 }
 
+/** Presets **/
+
+html[data-preset="middle"] #cards {
+	--cards-neg-offset: calc(var(--card-height) / -2);
+	--cards-offset: calc(var(--card-height) / 2);
+	transform: translateY(var(--cards-neg-offset));
+	margin-top: var(--cards-offset);
+}
+
 /** Debug **/
 
 html[data-debug="true"] main {

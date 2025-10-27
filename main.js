@@ -14,6 +14,24 @@ pane.addBinding(debugConfig, "debug", {
 	label: "Debug",
 });
 
+const preset = {
+	preset: "default",
+};
+
+pane
+	.addBinding(preset, "preset", {
+		label: "Preset",
+		options: {
+			default: "default",
+			middle: "middle",
+		},
+	})
+	.on("change", (ev) => {
+		if (ev.value === "middle") {
+			stickyPosition.stickyPosition = 50;
+		}
+	});
+
 const cardConfig = pane.addFolder({
 	title: "Cards",
 	expanded: true,
@@ -57,24 +75,12 @@ cardConfig.addBinding(cardGap, "cardGap", {
 	step: 1,
 });
 
-// const stickyPosition = {
-// 	stickyPosition: "top",
-// };
-
-// cardConfig.addBinding(stickyPosition, "stickyPosition", {
-// 	label: "Sticky Position",
-// 	options: {
-// 		top: "top",
-// 		middle: "middle",
-// 		bottom: "bottom",
-// 	},
-// });
-
 let isUpdating = false;
 let timeoutId = null;
 
 const update = () => {
 	if (isUpdating) return;
+
 	isUpdating = true;
 
 	try {
@@ -84,6 +90,7 @@ const update = () => {
 		document.documentElement.style.setProperty("--card-top-offset", cardOffset.cardOffset);
 		document.documentElement.style.setProperty("--sticky-position", `${stickyPosition.stickyPosition}%`);
 		document.documentElement.dataset.stickyPosition = stickyPosition.stickyPosition;
+		document.documentElement.dataset.preset = preset.preset;
 	} finally {
 		isUpdating = false;
 	}
